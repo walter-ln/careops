@@ -15,7 +15,7 @@ A CareOps+ será evoluída **a cada aula**, integrando os temas:
 
 ---
 
-# 📦 1. Estrutura do Projeto
+# 1. Estrutura do Projeto
 
 careops/
 │
