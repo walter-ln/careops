@@ -1,4 +1,4 @@
-# CareOps+ — Aplicação Base para Disciplina de DevSecOps  
+## CareOps+ — Aplicação Base para Disciplina de DevSecOps  
 
 API simples utilizada nas aulas práticas da disciplina **Segurança de Aplicações (DevSecOps)** – Dell Academy 2025 – IMD/UFRN.
 
@@ -15,7 +15,7 @@ A CareOps+ será evoluída **a cada aula**, integrando os temas:
 
 ---
 
-# 1. Estrutura do Projeto
+## 1. Estrutura do Projeto
 
 careops/
 │
@@ -30,9 +30,9 @@ careops/
 
 ---
 
-# 2. Como rodar a aplicação
+## 2. Como rodar a aplicação
 
-## **2.1 Instalar dependências**
+### **2.1 Instalar dependências**
 
 No diretório raiz da aplicação:
 
@@ -60,7 +60,7 @@ https://<seu-codespace>.app.github.dev
 
 ⸻
 
-# 3. Acessar a aplicação (UI)
+## 3. Acessar a aplicação (UI)
 
 Abra o navegador e acesse:
 
@@ -141,39 +141,40 @@ Outros endpoints serão adicionados aula a aula.
 A CareOps+ evoluirá com:
 
 Aula 1
-	•	Conceito geral de SDLC Seguro
-	•	Estrutura mínima da aplicação
+	• Conceito geral de SDLC Seguro
+	• Estrutura mínima da aplicação
 
 Aula 2
-	•	OWASP Top 10
-	•	Primeiras vulnerabilidades intencionais
+	• OWASP Top 10
+	• Primeiras vulnerabilidades intencionais
 
 Aula 3
-	•	Testes com pytest
-	•	Simulação de erro lógico
+	• Testes com pytest
+	• Simulação de erro lógico
 
 Aula 4
-	•	CodeQL (SAST)
-	•	Correção de vulnerabilidades
+	• CodeQL (SAST)
+	• Correção de vulnerabilidades
 
 Aula 5
-	•	SCA com Dependabot e Trivy
+	• SCA com Dependabot e Trivy
 
 Aula 6
-	•	DAST com OWASP ZAP
+	• DAST com OWASP ZAP
 
 Aula 7
-	•	Segurança em containers
-	•	Dockerfile seguro
+	• Segurança em containers
+	• Dockerfile seguro
 
 Aula 8
-	•	SBOM com Syft
-	•	Scanner com Grype
+	• SBOM com Syft
+	• Scanner com Grype
 
 Aula 9
-	•	Pipeline DevSecOps completo
+	• Pipeline DevSecOps completo
+```
 
-8. Problemas comuns (FAQ rápido)
+## 8. Problemas comuns (FAQ rápido)
 
 Erro: "Could not import module careops"
 
@@ -195,7 +196,7 @@ Solução:
 	•	Confira a aba PORTS
 	•	Rode novamente o uvicorn
 
-🧾 9. Licença
+## 9. Licença
 
-Conteúdo exclusivo para uso na disciplina Segurança de Aplicações (DevSecOps) – Dell Academy 2025.
+Conteúdo com direitos reservados.
 
