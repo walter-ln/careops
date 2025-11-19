@@ -51,6 +51,10 @@ No diretório careops/:
 
 uvicorn main:app --host 0.0.0.0 --port 8000
 
+ou
+
+python -m uvicorn main:app --host 0.0.0.0 --port 8000
+
 Se você estiver usando o GitHub Codespaces, a porta será detectada e exposta automaticamente.
 
 Você verá um link assim:
