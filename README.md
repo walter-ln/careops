@@ -1,4 +1,4 @@
-# 🏥 CareOps+ — Aplicação Base para Disciplina de DevSecOps  
+# CareOps+ — Aplicação Base para Disciplina de DevSecOps  
 
 API simples utilizada nas aulas práticas da disciplina **Segurança de Aplicações (DevSecOps)** – Dell Academy 2025 – IMD/UFRN.
 
