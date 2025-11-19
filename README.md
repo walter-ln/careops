@@ -16,7 +16,7 @@ A CareOps+ será evoluída **a cada aula**, integrando os temas:
 ---
 
 ## 1. Estrutura do Projeto
-
+```
 careops/
 │
 ├── init.py
@@ -27,7 +27,7 @@ careops/
 │   └── index.html
 ├── requirements.txt     # Dependências Python
 └── README.md            # Este arquivo
-
+```
 ---
 
 ## 2. Como rodar a aplicação
