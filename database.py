@@ -1,6 +1,28 @@
 import json
 from pathlib import Path
 
+# database.py
+"""Minimal stub 'database' module to satisfy imports in aluno/labs/aula5/security_examples.py.
+
+Expand this stub with the real API if/when tests or code require it.
+"""
+
+def connect(*args, **kwargs):
+    """Return a fake connection or None for tests."""
+    return None
+
+def get_user(username):
+    """Return None or a minimal user dict for tests that might call it."""
+    return None
+
+class DummyDB:
+    def __init__(self):
+        self._store = {}
+    def get(self, k, default=None):
+        return self._store.get(k, default)
+    def set(self, k, v):
+        self._store[k] = v
+
 DB_FILE = Path(__file__).parent / "patients.json"
 
 
