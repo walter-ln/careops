@@ -1,3 +1,6 @@
+# requirements-dev.txt for development 
+-r requirements.txt
+
 pytest
 bandit
 pip-audit

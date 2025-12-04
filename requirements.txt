@@ -1,4 +1,5 @@
+# requirements.txt - staging and production
 fastapi==0.95.0
 uvicorn==0.22.0
-jinja2==2.11.2        # versão vulnerável (CVE-2020-28493) (para SCA)
+jinja2==2.11.2        # versão vulnerável (CVE-2020-28493)
 markupsafe==1.1.1     # versão vulnerável (CVE-2021-23336)
