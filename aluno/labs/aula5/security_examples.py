@@ -3,7 +3,7 @@
 import hashlib
 import re
 import os
-
+import database
 
 def hash_password_insecure(password: str) -> str:
     """
