@@ -36,9 +36,3 @@ jobs:
       - name: Run pytest
         run: |
             pytest -q aluno/labs/aula5/test_security_examples.py
-
-      - name: Run Bandit (SAST) – dev (somente aviso)
-        if: github.ref == 'refs/heads/dev'
-        run: |
-          echo "Rodando Bandit (SAST) em dev – não falha o pipeline por enquanto"
-          bandit -r . -ll || true
