@@ -1,8 +1,8 @@
 # aluno/labs/aula5/security_examples.py
-
 import hashlib
 import re
 import os
+from . import database
 
 def hash_password_insecure(password: str) -> str:
     """
