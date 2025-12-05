@@ -2,7 +2,14 @@
 import hashlib
 import re
 import os
-from . import database
+
+# substituimos o from . import database
+try:
+    # quando o pacote raiz estiver disponível (por exemplo: import careops.database)
+    from careops import database
+except ImportError:
+    # quando o módulo for executado/importado como módulo de topo (ex.: tests que fazem `from security_examples import ...`)
+    import database
 
 def hash_password_insecure(password: str) -> str:
     """
