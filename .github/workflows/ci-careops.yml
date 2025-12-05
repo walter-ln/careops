@@ -67,6 +67,7 @@ jobs:
         run: |
             echo "Rodando pip-audit (SCA) em dev/aula7 – somente aviso"
             pip-audit -r requirements.txt || true
+            pip-audit -r requirements-dev.txt || true
       
         # SCA em stg/prod (gate de segurança)
       - name: Run pip-audit (SCA) – stg/prod (gate de segurança)
@@ -74,4 +75,5 @@ jobs:
         run: |
             echo "Rodando pip-audit (SCA) em stg/prod – falha em caso de vulnerabilidades"
             pip-audit -r requirements.txt
+            pip-audit -r requirements-dev.txt || true
 
