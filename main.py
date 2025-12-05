@@ -1,75 +1,120 @@
-from pathlib import Path
-from typing import Optional
-
-from fastapi import FastAPI, Request, Query, HTTPException
-from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
+from pydantic import ValidationError
+from typing import Dict
+import database
+from database import load_db, save_db
 
-# Caminho base para achar a pasta de templates
-BASE_DIR = Path(__file__).resolve().parent
-templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
-app = FastAPI(
-    title="CareOps+ API",
-    version="0.1.0",
-    description="Mini aplicação de exemplo para a disciplina de Segurança de Aplicações (DevSecOps)."
-)
+app = FastAPI(title="CareOps+ API", version="0.2.0")
+
+templates = Jinja2Templates(directory="templates")
 
 
 @app.get("/", response_class=HTMLResponse)
-async def index(request: Request):
-    """
-    Página inicial HTML da aplicação (equivalente ao render_template do Flask).
-    Mostra um formulário simples que usa o endpoint /sum.
-    """
+def root(request: Request):
     return templates.TemplateResponse(
-        "index.html",
-        {
-            "request": request,
-            "title": "CareOps+ - Calculadora simples",
-        },
+        "index.html", {"request": request, "title": "CareOps+ Aula 2"}
     )
 
 
 @app.get("/health")
-async def health():
-    """
-    Healthcheck simples.
-    Usado em CI/CD e monitoramento.
-    """
+def health():
     return {"status": "ok"}
 
 
 @app.get("/sum")
-async def sum_route(
-    a: Optional[float] = Query(None, description="Primeiro valor da soma"),
-    b: Optional[float] = Query(None, description="Segundo valor da soma"),
-):
-    """
-    Endpoint de soma simples (equivalente ao /sum do Flask).
-    Exemplo: GET /sum?a=2&b=3  ->  {"result": 5}
-    """
-    if a is None or b is None:
-        # Erro semelhante ao do Flask quando parâmetros estão ausentes/invalidos
-        raise HTTPException(status_code=400, detail="missing parameters 'a' and/or 'b'")
-
+def sum_route(a: str, b: str):
+    # Vulnerável: validação fraca
     try:
         result = float(a) + float(b)
-    except (TypeError, ValueError):
-        raise HTTPException(status_code=400, detail="invalid parameters")
-
+    except Exception as e:
+        print(f"[DEBUG] erro somando: {e} com valores a={a}, b={b}")
+        return JSONResponse(
+            {"error": "invalid parameters"}, status_code=400
+        )
     return {"result": result}
 
 
-# Opcional: endpoint JSON só para debug/uso em aula
-@app.get("/info")
-async def info():
+@app.get("/echo")
+def echo(msg: str):
+    # Vulnerável: refletindo entrada no HTML
+    return HTMLResponse(f"<h3>Eco:</h3><p>{msg}</p>")
+
+
+@app.get("/patients")
+def get_patients():
+    db = load_db()
+    # Vulnerável: sem autenticação, exibe tudo
+    return db["patients"]
+
+
+@app.get("/patient/{id}")
+def get_patient(id: int):
+    db = load_db()
+    patient = db["patients"].get(str(id))
+    if not patient:
+        raise HTTPException(status_code=404, detail="Paciente não encontrado")
+    return patient
+
+
+@app.post("/patients")
+def create_patient(payload: Dict):
     """
-    Endpoint JSON com informações básicas da API.
-    Útil para demonstrações e testes automatizados.
+    Vulnerabilidades:
+    - sem validação de tipos (A03)
+    - campos permitidos não controlados (A04, insecure design)
+    - log inseguro
     """
+    print(f"[DEBUG] Criando paciente com payload inseguro: {payload}")
+
+    db = load_db()
+    new_id = max(map(int, db["patients"].keys())) + 1
+    payload["id"] = new_id
+
+    db["patients"][str(new_id)] = payload
+    save_db(db)
+    return {"message": "Paciente criado", "patient": payload}
+
+
+@app.delete("/patients/{id}")
+def delete_patient(id: int):
+    db = load_db()
+
+    # Vulnerável: qualquer um pode apagar
+    deleted = db["patients"].pop(str(id), None)
+    save_db(db)
+
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Paciente não encontrado")
+
+    return {"message": "Paciente removido", "patient": deleted}
+
+
+@app.put("/patients/{id}")
+def update_patient(id: int, payload: Dict):
+    db = load_db()
+
+    # Vulnerável: sobrescreve tudo sem checar estrutura
+    if str(id) not in db["patients"]:
+        raise HTTPException(status_code=404, detail="Paciente não encontrado")
+
+    print(f"[DEBUG] Atualizando paciente: {payload}")
+
+    payload["id"] = id
+    db["patients"][str(id)] = payload
+    save_db(db)
+
+    return {"message": "Paciente atualizado", "patient": payload}
+
+
+@app.get("/debug/config")
+def debug_config():
+    # EXPOSTO DE PROPÓSITO (para aula OWASP)
     return {
-        "app": "CareOps+ API",
-        "version": "0.1.0",
-        "endpoints": ["/", "/health", "/sum", "/info"],
+        "debug": True,
+        "secret_key": "123456",
+        "database_path": "patients.json",
+        "environment": "development"
     }
