@@ -1,1 +1,1 @@
-from .main import careops  # para permitir `uvicorn careops:app`
+from .main import app  # para permitir `uvicorn careops:app`
