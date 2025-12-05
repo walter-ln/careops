@@ -6,6 +6,7 @@ from typing import Dict
 import database
 from database import load_db, save_db
 
+from config import settings  # <-- novo import
 
 app = FastAPI(title="CareOps+ API", version="0.2.0")
 
@@ -13,15 +14,23 @@ templates = Jinja2Templates(directory="templates")
 
 
 @app.get("/", response_class=HTMLResponse)
-def root(request: Request):
+async def index(request: Request):
+    # Exemplo: exibindo o ambiente atual na página
     return templates.TemplateResponse(
-        "index.html", {"request": request, "title": "CareOps+ Aula 2"}
+        "index.html",
+        {
+            "request": request,
+            "env": settings.APP_ENV,
+        },
     )
-
 
 @app.get("/health")
 def health():
-    return {"status": "ok"}
+    return {
+        "status": "ok",
+        "env": settings.APP_ENV,
+        "database_url": settings.DATABASE_URL,
+    }
 
 
 @app.get("/sum")
