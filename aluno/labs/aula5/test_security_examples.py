@@ -3,7 +3,7 @@
 import re
 import hashlib
 
-from security_examples import (
+from aluno.labs.aula5.security_examples import (
     hash_password_insecure,
     build_user_query,
     sanitize_comment,
