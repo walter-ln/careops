@@ -47,14 +47,16 @@ jobs:
             pytest -q test_security_examples.py
       
       # aulas 7.1 e 7.2
-      - name: Run Bandit (SAST) – dev (somente aviso)
-        if: github.ref == 'refs/heads/dev'
+      # SAST em dev + aula7 (somente aviso)
+      - name: Run Bandit (SAST) – dev/aula7 (somente aviso)
+        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/aula7'
         run: |
-          echo "Rodando Bandit (SAST) em dev – não falha o pipeline por enquanto"
-          bandit -r app -ll || true
-
+          echo "Rodando Bandit (SAST) em dev/aula7 – não falha o pipeline por enquanto"
+          bandit -r . -ll || true
+      
+      # SAST em stg/prod (gate de segurança)
       - name: Run Bandit (SAST) – stg/prod (gate de segurança)
         if: github.ref == 'refs/heads/stg' || github.ref == 'refs/heads/prod'
         run: |
           echo "Rodando Bandit (SAST) em stg/prod – falha se encontrar problemas"
-          bandit -r app -ll
+          bandit -r . -ll
