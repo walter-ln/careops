@@ -1,0 +1,67 @@
+name: Container Build & Scan - CareOps
+
+on:
+  push:
+    branches:
+      - aula8
+      - aula7
+      - dev
+      - stg
+      - prod
+  pull_request:
+    branches:
+      - dev
+      - stg
+      - prod
+
+jobs:
+  build-test-scan:
+    name: Build, smoke test and scan Docker image
+    runs-on: ubuntu-latest
+
+    env:
+      IMAGE_NAME: careops
+      IMAGE_TAG: ${{ github.sha }}  # hash do commit, garante unicidade
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        run: |
+          docker build -t $IMAGE_NAME:$IMAGE_TAG .
+
+      - name: Smoke test - run container and hit /health
+        run: |
+          # Sobe o container em background
+          docker run -d --rm \
+            -p 8000:8000 \
+            --name careops-test \
+            -e APP_ENV=ci \
+            -e DATABASE_URL="sqlite:///./ci.db" \
+            -e SECRET_KEY="ci-lab-secret" \
+            $IMAGE_NAME:$IMAGE_TAG
+
+          # Aguarda alguns segundos para o container subir
+          sleep 10
+
+          # Faz uma requisição simples ao /health
+          curl -f http://localhost:8000/health
+
+          # Para o container
+          docker stop careops-test
+
+      - name: Install Trivy
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y wget
+          wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_Linux-64bit.tar.gz
+          tar zxvf trivy_Linux-64bit.tar.gz
+          sudo mv trivy /usr/local/bin/
+
+      - name: Scan image with Trivy
+        run: |
+          trivy image $IMAGE_NAME:$IMAGE_TAG 
