@@ -44,4 +44,4 @@ jobs:
 
       - name: Run pytest
         run: |
-            pytest -q aluno/labs/aula5/test_security_examples.py
+            pytest -q test_security_examples.py
