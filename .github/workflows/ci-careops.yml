@@ -60,3 +60,18 @@ jobs:
         run: |
           echo "Rodando Bandit (SAST) em stg/prod – falha se encontrar problemas"
           bandit -r . -ll
+
+        # SCA em dev + aula7 (somente aviso)
+      - name: Run pip-audit (SCA) – dev/aula7 (somente aviso)
+        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/aula7'
+        run: |
+            echo "Rodando pip-audit (SCA) em dev/aula7 – somente aviso"
+            pip-audit -r requirements.txt || true
+      
+        # SCA em stg/prod (gate de segurança)
+      - name: Run pip-audit (SCA) – stg/prod (gate de segurança)
+        if: github.ref == 'refs/heads/stg' || github.ref == 'refs/heads/prod'
+        run: |
+            echo "Rodando pip-audit (SCA) em stg/prod – falha em caso de vulnerabilidades"
+            pip-audit -r requirements.txt
+
