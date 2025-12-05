@@ -41,7 +41,20 @@ jobs:
 
       - name: Add aula5 dir to PYTHONPATH
         run: echo "PYTHONPATH=${GITHUB_WORKSPACE}/aluno/labs/aula5:${PYTHONPATH}" >> $GITHUB_ENV
-
+      # aulas 5 e 6
       - name: Run pytest
         run: |
             pytest -q test_security_examples.py
+      
+      # aulas 7.1 e 7.2
+      - name: Run Bandit (SAST) – dev (somente aviso)
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          echo "Rodando Bandit (SAST) em dev – não falha o pipeline por enquanto"
+          bandit -r app -ll || true
+
+      - name: Run Bandit (SAST) – stg/prod (gate de segurança)
+        if: github.ref == 'refs/heads/stg' || github.ref == 'refs/heads/prod'
+        run: |
+          echo "Rodando Bandit (SAST) em stg/prod – falha se encontrar problemas"
+          bandit -r app -ll
